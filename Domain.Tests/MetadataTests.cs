@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
+﻿using Xunit;
 
 namespace Domain.Tests
 {
@@ -10,8 +7,8 @@ namespace Domain.Tests
         [Fact]
         public void MetadataClassShouldContainCorrectProps()
         {
-            var metadata = new ScheduleEntry.Metadata();
-            var validProperties = new string[] { "ID", "Description", "IsAllDay", "IsAlarm" };
+            var metadata = new Schedule.Metadata();
+            var validProperties = new string[] { "Id", "Description", "IsAllDay", "IsAlarm", "UsesTimer", "Participants", "Links" };
 
             // Check that each prop exists
             foreach (var property in validProperties)

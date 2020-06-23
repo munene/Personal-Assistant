@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Presentation\Presentation.csproj" />
+    <Folder Include="Interfaces\Persistence\" />
   </ItemGroup>
 
 </Project>

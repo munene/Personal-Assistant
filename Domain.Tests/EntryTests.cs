@@ -2,13 +2,13 @@
 
 namespace Domain.Tests
 {
-    public class ScheduleEntryTests
+    public class EntryTests
     {
         [Fact]
         public void DomainShouldContainCorrectProps()
         {
-            var scheduleEntry = new ScheduleEntry.ScheduleEntry();
-            var validProperties = new string[] { "ID", "Title", "Start", "End", "Metadata" };
+            var scheduleEntry = new Schedule.Entry();
+            var validProperties = new string[] { "Id", "Title", "From", "To", "Metadata", "Source", "SourceId" };
 
             // Check that each prop exists
             foreach (var property in validProperties)

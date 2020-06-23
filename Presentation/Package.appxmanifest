@@ -7,14 +7,14 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="6522be63-28fc-4647-be99-7e884b81e1d1"
+    Name="bf09aad9-9739-4da8-900a-119773b978c7"
     Publisher="CN=jerem"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="6522be63-28fc-4647-be99-7e884b81e1d1" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="bf09aad9-9739-4da8-900a-119773b978c7" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>MyPersonalAssistant</DisplayName>
+    <DisplayName>Presentation</DisplayName>
     <PublisherDisplayName>jerem</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -30,12 +30,12 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="MyPersonalAssistant.App">
+      EntryPoint="Presentation.App">
       <uap:VisualElements
-        DisplayName="MyPersonalAssistant"
+        DisplayName="Presentation"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="MyPersonalAssistant"
+        Description="Presentation"
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />

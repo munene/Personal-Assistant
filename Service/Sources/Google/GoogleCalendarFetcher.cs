@@ -9,19 +9,20 @@ using Google.Apis.Util.Store;
 using System.IO;
 using System.Threading;
 using Application.Interfaces.Service;
+using Application.Schedule.Dtos;
 
 namespace Service.Sources
 {
-    public class GoogleCalendarEntrySource : IFetchScheduleEntries
+    public class GoogleCalendarFetcher : IScheduleFetcher
     {
-        public GoogleCalendarEntrySource()
+        public GoogleCalendarFetcher()
         {
             Initialize();
         }
 
-        public List<Entry> GetEntriesFromSource()
+        public List<EntryDto> GetEntriesFromSource()
         {
-            throw new NotImplementedException();
+            return new List<EntryDto>();
         }
 
         public void Initialize()

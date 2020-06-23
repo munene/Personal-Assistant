@@ -1,10 +1,11 @@
-﻿using Domain.Schedule;
+﻿using Application.Schedule.Dtos;
+using Domain.Schedule;
 using System.Collections.Generic;
 
 namespace Application.Interfaces.Service
 {
-    public interface IFetchScheduleEntries
+    public interface IScheduleFetcher
     {
-        List<Entry> GetEntriesFromSource();
+        List<EntryDto> GetEntriesFromSource();
     }
 }

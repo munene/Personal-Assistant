@@ -1,10 +1,13 @@
-﻿using Autofac;
+﻿using Presentation.Views;
 using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Specification.Shared;
+using Prism.Mvvm;
+using System.Globalization;
 
 namespace Presentation
 {
@@ -13,7 +16,6 @@ namespace Presentation
     /// </summary>
     sealed partial class App : Windows.UI.Xaml.Application
     {
-        private static IContainer Container { get; set; }
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -23,7 +25,8 @@ namespace Presentation
         {
             InitializeComponent();
             Suspending += OnSuspending;
-            InitializeDependencyInjection();
+            IoC.Initialize();
+            InitializeViewModelResolver();
         }
 
         /// <summary>
@@ -60,7 +63,7 @@ namespace Presentation
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    rootFrame.Navigate(typeof(SchedulePage), e.Arguments);
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();
@@ -91,14 +94,16 @@ namespace Presentation
             deferral.Complete();
         }
 
-        /// <summary>
-        /// Initialize the IOC container and register the types
-        /// </summary>
-        private void InitializeDependencyInjection()
+        private void InitializeViewModelResolver()
         {
-            var builder = new ContainerBuilder();
-            //builder.RegisterType<ConsoleOutput>().As<IEntrySource>();
-            Container = builder.Build();
+
+            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) =>
+            {
+                var viewName = viewType.FullName;
+                var viewAssemblyName = viewType.GetType().Assembly.FullName;
+                var viewModelName = String.Format(CultureInfo.InvariantCulture, "{0}ViewModel, {1}", viewName, viewAssemblyName);
+                return Type.GetType(viewModelName);
+            });
         }
     }
 }

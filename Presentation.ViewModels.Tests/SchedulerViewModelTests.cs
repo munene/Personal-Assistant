@@ -1,22 +1,23 @@
-﻿using Domain.Schedule;
-using Moq;
-using Service.Sources;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Moq;
+using Application.Schedule.Dtos;
+using Application.Interfaces.Service;
 using Xunit;
 
-namespace Service.Tests
+namespace Presentation.ViewModels.Tests
 {
-    public class ExternalScheduleEntrySourceTests
+    public class SchedulerViewModelTests
     {
-        Mock<IEntrySource> _entrySourceMock;
-        List<Entry> _entries;
+        Mock<IScheduleFetcher> _entrySourceMock;
+        List<EntryDto> _entries;
+        ScheduleViewModel _viewModel;
 
-        public ExternalScheduleEntrySourceTests()
+        public SchedulerViewModelTests()
         {
-            _entries = new List<Entry>
+            _entries = new List<EntryDto>
             {
-                new Entry
+                new EntryDto
                 {
                     From = DateTime.Now,
                     To = DateTime.Now.AddMinutes(30),
@@ -26,7 +27,7 @@ namespace Service.Tests
                     Title = "Test One",
                     SourceId = "1"
                 },
-                new Entry
+                new EntryDto
                 {
                     From = DateTime.Now,
                     To = DateTime.Now.AddMinutes(30),
@@ -36,7 +37,7 @@ namespace Service.Tests
                     Title = "Test Two",
                     SourceId = "2"
                 },
-                new Entry
+                new EntryDto
                 {
                     From = DateTime.Now,
                     To = DateTime.Now.AddMinutes(30),
@@ -47,16 +48,17 @@ namespace Service.Tests
                     SourceId = "3"
                 }
             };
-            _entrySourceMock = new Mock<IEntrySource>();
-            _entrySourceMock.Setup(p => p.GetEntries()).Returns(_entries);
+            _entrySourceMock = new Mock<IScheduleFetcher>();
+            _entrySourceMock.Setup(p => p.GetEntriesFromSource()).Returns(_entries);
+
+            _viewModel = new ScheduleViewModel(_entrySourceMock.Object);
         }
 
-        //[Fact]
-        //public void ShouldReturnScheduleEntriesFromGoogleCalendar()
-        //{
-        //    var source = new GoogleCalendarEntrySource();
-        //    var entries = source.GetEntries();
-        //    Assert.Equal(_entries, entries);
-        //}
+        [Fact]
+        public void ShouldGetEntriesFromSource()
+        {
+            Assert.NotNull(_viewModel.Entries);
+            Assert.NotEmpty(_viewModel.Entries);
+        }
     }
 }

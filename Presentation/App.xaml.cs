@@ -7,14 +7,15 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Specification.Shared;
 using Prism.Mvvm;
-using System.Globalization;
+using Prism.Windows;
+using System.Threading.Tasks;
 
 namespace Presentation
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
-    sealed partial class App : Windows.UI.Xaml.Application
+    sealed partial class App : PrismApplication
     {
 
         /// <summary>
@@ -24,9 +25,8 @@ namespace Presentation
         public App()
         {
             InitializeComponent();
-            Suspending += OnSuspending;
+            //Suspending += OnSuspending;
             IoC.Initialize();
-            InitializeViewModelResolver();
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace Presentation
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override Task OnLaunchApplicationAsync(LaunchActivatedEventArgs args)
         {
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -47,7 +47,7 @@ namespace Presentation
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
                     //TODO: Load state from previously suspended application
                 }
@@ -56,18 +56,32 @@ namespace Presentation
                 Window.Current.Content = rootFrame;
             }
 
-            if (e.PrelaunchActivated == false)
+            if (args.PrelaunchActivated == false)
             {
                 if (rootFrame.Content == null)
                 {
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(SchedulePage), e.Arguments);
+                    rootFrame.Navigate(typeof(SchedulePage), args.Arguments);
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
+
+            return Task.FromResult(true);
+        }
+
+        protected override void ConfigureViewModelLocator()
+        {
+            base.ConfigureViewModelLocator();
+
+            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) =>
+            {
+                var viewName = viewType.Name;
+                var viewModelProjectName = "Presentation.ViewModels";
+                return Type.GetType($"{viewModelProjectName}.{viewName}ViewModel, {viewModelProjectName}");
+            });
         }
 
         /// <summary>
@@ -92,18 +106,6 @@ namespace Presentation
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
-        }
-
-        private void InitializeViewModelResolver()
-        {
-
-            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) =>
-            {
-                var viewName = viewType.FullName;
-                var viewAssemblyName = viewType.GetType().Assembly.FullName;
-                var viewModelName = String.Format(CultureInfo.InvariantCulture, "{0}ViewModel, {1}", viewName, viewAssemblyName);
-                return Type.GetType(viewModelName);
-            });
         }
     }
 }

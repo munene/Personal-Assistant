@@ -11,7 +11,7 @@ namespace Presentation.ViewModels.Tests
     {
         Mock<IScheduleFetcher> _entrySourceMock;
         List<EntryDto> _entries;
-        ScheduleViewModel _viewModel;
+        SchedulePageViewModel _viewModel;
 
         public SchedulerViewModelTests()
         {
@@ -51,7 +51,7 @@ namespace Presentation.ViewModels.Tests
             _entrySourceMock = new Mock<IScheduleFetcher>();
             _entrySourceMock.Setup(p => p.GetEntriesFromSource()).Returns(_entries);
 
-            _viewModel = new ScheduleViewModel(_entrySourceMock.Object);
+            _viewModel = new SchedulePageViewModel(_entrySourceMock.Object);
         }
 
         [Fact]

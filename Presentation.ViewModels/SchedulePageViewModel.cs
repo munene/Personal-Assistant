@@ -5,10 +5,16 @@ using Prism.Mvvm;
 
 namespace Presentation.ViewModels
 {
-    public class ScheduleViewModel : BindableBase
+    public class SchedulePageViewModel : BindableBase
     {
+        public SchedulePageViewModel()
+        {
+
+        }
+
         public List<EntryDto> Entries { get; set; }
-        public ScheduleViewModel(IScheduleFetcher scheduleFetcher)
+        public string EntriesCount { get; set; } = "3";
+        public SchedulePageViewModel(IScheduleFetcher scheduleFetcher)
         {
             Entries = scheduleFetcher.GetEntriesFromSource();
         }

@@ -149,8 +149,8 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.10</Version>
     </PackageReference>
-    <PackageReference Include="Prism.Core">
-      <Version>7.2.0.1422</Version>
+    <PackageReference Include="Prism.Windows">
+      <Version>6.3.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +160,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Presentation.ViewModels\Presentation.ViewModels.csproj">
+      <Project>{4567316a-1073-4622-859b-d22a47e95657}</Project>
+      <Name>Presentation.ViewModels</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Specification\Specification.csproj">
       <Project>{eef05cd7-e3f1-43a8-b2fa-eb99b9242212}</Project>
       <Name>Specification</Name>

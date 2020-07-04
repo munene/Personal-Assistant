@@ -9,6 +9,7 @@ using Specification.Shared;
 using Prism.Mvvm;
 using Prism.Windows;
 using System.Threading.Tasks;
+using Autofac;
 
 namespace Presentation
 {
@@ -76,11 +77,17 @@ namespace Presentation
         {
             base.ConfigureViewModelLocator();
 
+            ViewModelLocationProvider.SetDefaultViewModelFactory((viewModelType) =>
+            {
+                return IoC.ResolveType(viewModelType);
+            });
+
             ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) =>
             {
                 var viewName = viewType.Name;
                 var viewModelProjectName = "Presentation.ViewModels";
-                return Type.GetType($"{viewModelProjectName}.{viewName}ViewModel, {viewModelProjectName}");
+                var viewModelType = Type.GetType($"{viewModelProjectName}.{viewName}ViewModel, {viewModelProjectName}");
+                return viewModelType;
             });
         }
 

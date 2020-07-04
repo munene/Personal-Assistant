@@ -1,15 +1,15 @@
 ﻿using Application.Interfaces.Service;
+using Application.Schedule.Queries.GetScheduleEntries;
 using Autofac;
+using Presentation.ViewModels;
 using Service.Sources;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Specification.Shared
 {
     public static class IoC
     {
-        private static IContainer Container { get; set; }
+        public static IContainer Container { get; set; }
 
         /// <summary>
         /// Initialize the IOC container and register the types
@@ -17,8 +17,15 @@ namespace Specification.Shared
         public static void Initialize()
         {
             var builder = new ContainerBuilder();
+            builder.RegisterType<GetScheduleEntryQuery>().As<IGetScheduleEntriesQuery>();
             builder.RegisterType<GoogleCalendarFetcher>().As<IScheduleFetcher>();
+            builder.RegisterType<SchedulePageViewModel>();
             Container = builder.Build();
+        }
+
+        public static object ResolveType(Type type)
+        {
+            return Container.Resolve(type);
         }
     }
 }

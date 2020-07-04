@@ -1,25 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using Moq;
+﻿using Application.Interfaces.Service;
 using Application.Schedule.Dtos;
-using Application.Interfaces.Service;
-using Xunit;
 using Application.Schedule.Queries.GetScheduleEntries;
+using Moq;
+using System;
+using System.Collections.Generic;
+using Xunit;
 
-namespace Presentation.ViewModels.Tests
+namespace Application.Tests.Queries
 {
-    public class SchedulerViewModelTests
+    public class ScheduleEntryQueryTests
     {
-        Mock<IGetScheduleEntriesQuery> _entrySourceMock;
+        Mock<IScheduleFetcher> _entrySourceMock;
         List<EntryDto> _entries;
-        SchedulePageViewModel _viewModel;
+        GetScheduleEntryQuery _scheduleEntryQuery;
 
-        public SchedulerViewModelTests()
+        public ScheduleEntryQueryTests()
         {
-            _entrySourceMock = new Mock<IGetScheduleEntriesQuery>();
-            _entrySourceMock.Setup(p => p.Execute()).Callback(() =>
-            {
-                _entries = new List<EntryDto>
+            _entries = new List<EntryDto>
             {
                 new EntryDto
                 {
@@ -52,18 +49,18 @@ namespace Presentation.ViewModels.Tests
                     SourceId = "3"
                 }
             };
-            });
-
-            _viewModel = new SchedulePageViewModel(_entrySourceMock.Object);
+            _entrySourceMock = new Mock<IScheduleFetcher>();
+            _entrySourceMock.Setup(p => p.GetEntriesFromSource()).Returns(_entries);
+            _scheduleEntryQuery = new GetScheduleEntryQuery(_entrySourceMock.Object);
         }
 
         [Fact]
-        public void ShouldGetEntriesFromSource()
+        public void ShouldGetListOfEntries()
         {
-            _viewModel.GetScheduleEntries();
-            Assert.NotNull(_entries);
-            Assert.NotEmpty(_entries);
-            Assert.Equal(3, _entries.Count);
+            var entries = _scheduleEntryQuery.Execute();
+
+            Assert.NotNull(entries);
+            Assert.NotEmpty(entries);
         }
     }
 }

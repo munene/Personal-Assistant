@@ -10,40 +10,41 @@ using System.IO;
 using System.Threading;
 using Application.Interfaces.Service;
 using Application.Schedule.Dtos;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Text;
 
 namespace Service.Sources
 {
     public class GoogleCalendarFetcher : IScheduleFetcher
     {
-        public GoogleCalendarFetcher()
-        {
-            Initialize();
-        }
+        public GoogleCalendarFetcher() => InitializeAsync();
 
         public List<EntryDto> GetEntriesFromSource()
         {
             return new List<EntryDto>();
         }
 
-        public void Initialize()
+        private async void InitializeAsync()
         {
             UserCredential credential;
             var scopes = new string[] { CalendarService.Scope.CalendarEvents };
 
-            using (var stream =
-                new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
-            {
-                // The file token.json stores the user's access and refresh tokens, and is created
-                // automatically when the authorization flow completes for the first time.
-                string credPath = "token.json";
-                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    GoogleClientSecrets.Load(stream).Secrets,
-                    scopes,
-                    "user",
-                    CancellationToken.None,
-                    new FileDataStore(credPath, true)).Result;
-                Console.WriteLine("Credential file saved to: " + credPath);
-            }
+            var credentials = await GetCredentials();
+            var credentialsBytes = Encoding.ASCII.GetBytes(credentials);
+            var credentialsStream = new MemoryStream(credentialsBytes);
+
+            // The file token.json stores the user's access and refresh tokens, and is created
+            // automatically when the authorization flow completes for the first time.
+            var roamingDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            var credPath = Path.Combine(roamingDirectory, "MyPersonalAssistant\\token.json");
+            credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                GoogleClientSecrets.Load(credentialsStream).Secrets,
+                scopes,
+                "user",
+                CancellationToken.None,
+                new FileDataStore(credPath, true));
+            Console.WriteLine("Credential file saved to: " + credPath);
 
             // Create Google Calendar API service.
             var service = new CalendarService(new BaseClientService.Initializer()
@@ -81,6 +82,24 @@ namespace Service.Sources
                 Console.WriteLine("No upcoming events found.");
             }
             Console.Read();
+        }
+
+        private async Task<string> GetCredentials()
+        {
+            try
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    var credentialsUrl = "https://content.jeremykabogo.com/assistant/credentials.json";
+                    var httpResponse = await httpClient.GetAsync(credentialsUrl);
+                    httpResponse.EnsureSuccessStatusCode();
+                    return await httpResponse.Content.ReadAsStringAsync();
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }
